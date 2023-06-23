@@ -1,4 +1,9 @@
-# **Conceptos y términos de las Bases de Datos Relacionales**
+# SQL
+1. [Conceptos y terminos de las bases de datos](#conceptos-y-términos-de-las-bases-de-datos-relacionales)
+
+## **Conceptos y términos de las Bases de Datos Relacionales.**
+
+___
 
 > Las bases de datos relacionales intentan cumplir con todos los conceptos del Modelo Relacional, aunque no es
 posible implementarlos todos
@@ -9,3 +14,7 @@ posible implementarlos todos
 - El valor nulo, se representa en SQL por el valor NULL.
 - La integridad de la tabla y cada registro está garantizada por el SGBD
 - La integridad referencial también está garantizada por el SGBD cuando se haya definido.
+
+___
+## **Tipos de Datos**
+___
