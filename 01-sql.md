@@ -1,6 +1,7 @@
 # SQL
 1. [Conceptos y terminos de las bases de datos](#conceptos-y-términos-de-las-bases-de-datos-relacionales)
 2. [Tipos de Datos](#tipos-de-datos)
+3. [Sentencias](#sentencias)
 
 ## **Conceptos y términos de las Bases de Datos Relacionales.**
 
@@ -112,3 +113,65 @@ convertir de UTC a la zona horaria del sistema.
 
 Existen otros tipos de datos, como los tipos Espaciales, los cuales sirven para la generación, 
 almacenamiento y análisis de características geográficas, o el tipo de dato JSON, pero no vamos a expandir a esos tipos de datos.
+___
+## **Sentencias**
+___
+SQL se divide en varios componentes o sub-lenguajes. Nos centraremos en los tres primeros 
+de los siguientes:
+
+1. Lenguaje de Definición de Datos (DDL): permite crear, definir, modificar y eliminar 
+nuevas bases de datos, tablas, campos e índices (y otros elementos).
+
+2. Lenguaje de Manipulación de Datos (DML): son las sentencias que permiten insertar 
+datos en las tablas, consultarlos, modificarlos y borrarlos.
+
+3. Lenguaje de Consulta de Datos (DQL): permiten generar consultas para ordenar, 
+filtrar y extraer datos de la base de datos.
+
+4. Lenguaje de Control de Datos (DCL): permite controlar el acceso a los datos 
+mediante un sistema de permisos sobre los usuarios. En MySQL, estas y otras 
+sentencias se clasifican como Sentencias de Administración de Cuentas.
+
+5. Lenguaje de Control de Transacciones (TCL): permite manejar conjuntos de 
+sentencias en una sola unidad de ejecución, llamada transacción.
+
+### **Sintaxis de SQL**
+
+Debemos señalar que SQL no distingue entre mayúsculas y minúsculas, por lo tanto, las 
+palabras reservadas pueden escribirse de cualquier forma. Los nombres de las bases de 
+datos, como los de tablas es recomendable escribirlos de la misma forma en que se crearon
+
+Dicho esto, en esta teoría vamos a usar mayúsculas para las palabras reservadas de SQL, 
+como **CREATE, SELECT, DELETE,** etc. y minúsculas para nombres de bases de datos, tablas, 
+campos, etc.
+
+Los espacios en blanco no son significantes en la sintaxis, incluyendo los saltos de línea, por 
+lo que podemos organizar y separar sentencias largas en varias líneas para mejorar la 
+escritura y lectura de las mismas, las cuales pueden llegar a ser muy complejas.
+
+Las cadenas de caracteres literales se pueden escribir encerradas entre comillas simples (') 
+o dobles (").
+
+También se pueden escribir comentarios en SQL, y hay varias formas de hacerlo. Un 
+comentario de una línea se interpreta desde los caracteres -- hasta el final de la línea, 
+siempre dejando un espacio después de los guiones. MySQL lo soporta y también 
+implementa sus propios comentarios de una línea, comenzando con el símbolo #.
+Por otro lado, también se soportan cometarios multilínea con los pares de caracteres de 
+inicio y fin /* y */
+
+```
+# este es un comentario unicamente en MySQL
+
+-- este es un comentario en una linea de SQL estándar
+
+/* este es un
+Comentario
+multilinea estandar*/
+```
+
+MySQL soporta distintos operadores: 
+
+- De asignación: **=**
+- Aritméticos: **+, -, *, /, %.**
+- De comparación: **=, >, <, >=, <=, <>**
+- Lógicos: **AND, OR, ALL, ANY, BETWEEN, EXISTS, IN, LIKE, NOT, SOME.**
