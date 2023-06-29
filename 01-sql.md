@@ -1,7 +1,8 @@
-# SQL
+# <font color="yellow"><center>SQL</center></font>
 1. [Conceptos y terminos de las bases de datos](#conceptos-y-términos-de-las-bases-de-datos-relacionales)
 2. [Tipos de Datos](#tipos-de-datos)
 3. [Sentencias](#sentencias)
+4. [Lenguaje de Definición de Datos](#lenguaje-de-definición-de-datos)
 
 ## **Conceptos y términos de las Bases de Datos Relacionales.**
 
@@ -175,3 +176,66 @@ MySQL soporta distintos operadores:
 - Aritméticos: **+, -, *, /, %.**
 - De comparación: **=, >, <, >=, <=, <>**
 - Lógicos: **AND, OR, ALL, ANY, BETWEEN, EXISTS, IN, LIKE, NOT, SOME.**
+
+___
+## **Lenguaje de Definición de Datos**
+___
+
+Dentro de este sub-lenguaje se clasifican las sentencias que nos permitirán crear y definir nuevas bases de datos, tablas, campos e índices. Vamos a ver los más importantes y su sintaxis.
+
+
+### <font color="orange"><ins>**CREATE DATABASE**</ins></font>
+Crea una nueva base de datos o esquema vacío con el nombre indicado. Es posible también 
+indicar opciones adicionales que incluyen: colación y conjunto de caracteres, y 
+encriptación. Se puede usar la palabra reservada SCHEMA en lugar de DATABASE. 
+
+```
+Sintaxis: 
+         CREATE DATABASE nombre_bd;
+
+Ejemplo:
+        CREATE DATABASE cine;
+```
+
+### <font color="orange"><ins>**CREATE TABLE**</ins></font>
+Crea una tabla en la base de datos que está en uso en ese momento. Donde definiciones debe ser la definición de
+al menos un campo.
+Cada definición de la tabla debe escribirse separada por una coma (,). Estas definiciones pueden ser capos, índices,
+restricciones de clave primaria y foránea, etc. Por ejemplo, siguiendo con el ejemplo de la base de datos cine:
+
+```
+Sintaxis: 
+         CREATE TABLE nombre_tabla (definiciones);
+
+Ejemplo:
+        CREATE TABLE peliculas (
+            id_pelicula INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
+            titulo VARCHAR(150) NOT NULL,
+            duracion SMALLINT UNSIGNED NOT NULL
+        )
+
+Ejemplo 2: 
+        CREATE TABLE peliculas (
+            id_pelicula INT NOT NULL AUTO_INCREMENT UNIQUE,
+            titulo VARCHAR(150) NOT NULL,
+            duracion SMALLINT UNSIGNED NOT NULL
+            PRIMARY KEY (id_pelicula)
+        ) 
+```
+
+En esta simple definición, creamos una nueva tabla con el nombre películas y los campos:
+
+- **id_pelicula**: como entero, clave primaria, no nulo, único y auto incrementable.
+-  **titulo**: como una cadena de hasta 150 caracteres que no puede ser nulo.
+- **duracion**: como un entero pequeño, sin signo y no nulo, ya que vamos a indicar los minutos de la película con un
+entero.
+
+Los modificadores que agregamos a cada tipo de dato se conocen como atributos. Para el primer campo incluimos
+los siguientes: **NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY.**
+
+- **NOT NULL**: indica que el campo no puede ser nulo nunca.
+- **AUTO_INCREMENT**: indica que sus valores se van a insertar automáticamente por el SGBD aumentando en 1 cada
+vez.
+- **UNIQUE**: indica que el campo debe ser único para todos los registros.
+- **PRIMARY KEY**: indica que definimos como clave primaria al campo.
+
