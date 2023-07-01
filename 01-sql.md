@@ -239,3 +239,142 @@ vez.
 - **UNIQUE**: indica que el campo debe ser único para todos los registros.
 - **PRIMARY KEY**: indica que definimos como clave primaria al campo.
 
+### <font color="orange"><ins>**ALTER TABLE**</ins></font>
+Permite modificar la definición de una tabla, agregando, modificando o eliminando columnas o restricciones
+
+```
+Sintaxis: 
+         ALTER TABLE nombre_tabla <accion>;
+```
+
+Las acciones que podemos usar son:
+- **RENAME nuevo_nombre**: cambiar el nombre de la tabla.
+- **ADD nueva_columna definicion**: agregar una columna a la tabla.
+- **DROP columna**: eliminar una columna.
+- **MODIFY columna definicion**: cambiar la definicion de una columna.
+- **CHANGE columna nuevo_nombre definicion**: cambiar el nombre y definicion de una columna.
+
+Por ejemplo: 
+
+Si quisiéramos agregarle una columna más, de **año** de estreno, a la tabla peliculas, podemos usar:
+
+```
+ALTER TABLE peliculas ADD año SMALLINT;
+```
+
+> Si la tabla ya contenía registros, se insertará el valor NULL en la nueva columna creada para todos esos registros
+A menos que se defina un valor por defecto con el atributo DEFAULT al momento de agregar la columna. En tal caso, se insertará el valor indicado
+
+Por ejemplo .2:
+
+Si quisiéramos modificar una columna existente, por ejemplo, cambiando el tipo de dato:
+```
+ALTER TABLE peliculas MODIFY año INT;
+```
+> Si la tabla ya contenía registros, se intentará castear los valores de ese campo al nuevo tipo. Si no se puede hacer la
+sentencia dará un error.
+
+>Si la columna original tenía valores CHAR solo se podrá castear a INT, por ejemplo, si contiene valores
+correspondientes a números enteros dentro del rango de INT.
+
+> Si contiene valores fuera del rango, o alfabéticos, no se podrá completar la modificación.
+Finalmente, también se pueden agregar restricciones de clave foránea
+
+### <font color="orange"><ins>**DROP TABLE**</ins></font>
+Elimina la tabla indicada de la base de datos.
+```
+Sintaxis: 
+         DROP TABLE tabla;
+```
+> Si existen referencias a la tabla no podremos eliminarla sin antes eliminar las restricciones de clave foránea.
+
+### <font color="orange"><ins>**TRUNCATE**</ins></font>
+Elimina todos los registros de la tabla indicada
+```
+Sintaxis:
+         TRUNCATE tabla;
+```
+> Existe la misma restricción que en la sentencia anterior
+
+### <font color="orange"><ins>**Restricción de clave foránea – FOREIGN KEY**</ins></font>
+Vamos a ver que no hace falta que exista la restricción de clave foránea para referenciar o unir dos o más tablas.
+
+Sin embargo, si queremos que el SGBD mantenga la integridad referencial de la base de datos, debemos definir restricciones de clave foránea
+
+Usualmente se usan solo claves primarias simples (de una sola columna), por lo tanto, las claves foráneas también son simples.
+
+También se puede definir una restricción de clave foránea usando ALTER TABLE.
+
+Por ejemplo:
+
+Si quisiéramos definir una restricción de clave foránea sobre nuestra tabla peliculas, que haría referencia a una hipotética tabla directores (que debe existir de antemano) podríamos haberla definido de la siguiente manera:
+```
+CREATE TABLE peliculas (
+        id_pelicula INT NOT NULL AUTO_INCREMENT UNIQUE,
+        titulo VARCHAR(150) NOT NULL,
+        duracion SMALLINT UNSIGNED NOT NULL,
+        director SMALLINT UNSIGNED NOT NULL,
+        CONSTRAINT directores_fk FOREIGN KEY (director)
+        REFERENCES directores (id_director)
+);
+```
+
+Es posible definir qué debe suceder cuando se elimina un registro o actualiza el valor de una clave primaria a la cuál hace referencia un registro de otra tabla, con las subcláusulas ON DELETE y ON UPDATE.
+
+- **ON DELETE accion**: indica que se debe tomar una acción en el momento en que se elimine un registro en la tabla padre.
+
+- **ON UPDATE accion**: se refiere al momento en que se actualice el valor de la clave primaria de un registro de la tabla padre (no otro campo cualquiera).
+
+> Estas acciones se establecen para que se ejecuten automáticamente en el momento en que se cumple alguno de los requisitos definidos
+
+Ambas subcláusulas, ON DELETE y ON UPDATE, soportan las siguientes acciones:
+
+- **CASCADE**: en caso que se actualice (ON UPDATE) o elimine (ON DELETE) una fila de la tabla padre, automáticamente actualiza o elimina las filas correspondientes en la tabla hija.
+
+- **SET NULL**:  en caso que se actualice o elimine una fila de la tabla padre, automáticamente pone en NULL las filas correspondientes de la tabla hija. La columna que actúa como clave foránea no debe tener el atributo NOT NULL.
+
+- **RESTRICT**: rechaza la acción que se quiere realizar en la tabla padre. Es equivalente a no incluir la cláusula ON DELETE o ON UPDATE.
+
+- **NO ACTION**: es una palabra reservada del estándar SQL y en tablas InnoDB es equivalente a RESTRICT.
+
+- **SET DEFAULT**: es una palabra reservada por MySQL, pero no se puede usar en tablas InnoDB. Por lo tanto, no está recomendado su uso.
+
+Por ejemplo, si implementamos la subcláusula ON DELETE en la definición anterior:
+
+```
+CREATE TABLE peliculas (
+        id_pelicula INT NOT NULL AUTO_INCREMENT UNIQUE,
+        titulo VARCHAR(150) NOT NULL,
+        duracion SMALLINT UNSIGNED NOT NULL,
+        director SMALLINT UNSIGNED NOT NULL,
+        CONSTRAINT directores_fk FOREIGN KEY (director)
+        REFERENCES directores (id_director)
+        ON DELETE CASCADE
+);
+
+```
+En este caso elegimos la acción CASCADE, esto quiere decir que, si en algún momento se elimina el registro de un director, todas las filas correspondientes a sus películas también serán eliminadas.
+
+Esto es un poco drástico, ya que, en este caso hipotético, perderíamos los registros de las películas.
+
+Dicho esto, sería mucho mejor usar la acción SET NULL, de esta forma no perderíamos los registros de las películas,
+solo quedarían sin referencia y es posible, posteriormente, volver a referenciar al director (si se vuelven a cargar sus datos)
+
+### <font color="orange"><ins>**Indices**</ins></font>
+Un índice es, básicamente, una tabla (independiente) ordenada de los valores de algún campo de una tabla, con un puntero a la posición real del registro de esos valores. Esta estructura permite realizar operaciones de obtención de datos mucho más rápido, sacrificando espacio de almacenamiento (ya que se copian los valores del campo) ytiempo para la gestión del índice mismo.
+
+![Ejemplo grafico de indices](/images/indices.JPG)
+
+Ejemplo de un índice (i_titulo) sobre el campo título de la tabla peliculas. El índice mantiene el orden alfabético de los títulos de las películas y una referencia a la fila original. Al estar ordenado, la búsqueda es más rápida
+
+Al estar ordenado, un índice permite al SGBD usar algoritmos de búsqueda binaria para encontrar un elemento más rápido que una búsqueda secuencial, como debería hacerlo si no existiera el índice.
+
+- Los índices son manejados por el SGBD automáticamente en segundo plano, tanto en su uso para búsquedas, como en su mantenimiento.
+
+- Algunos se crean automáticamente por el SGBD. Como por ejemplo: claves primarias, claves foráneas, campos únicos, etc., todos tienen un índice asociado.
+
+- Un usuario puede crear un índice manualmente, sobre un campo que considere necesario, usando la sintaxis:
+
+```
+        CREATE INDEX nombre_indice ON tabla (col1);
+```
