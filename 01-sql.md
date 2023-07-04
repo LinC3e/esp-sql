@@ -3,6 +3,7 @@
 2. [Tipos de Datos](#tipos-de-datos)
 3. [Sentencias](#sentencias)
 4. [Lenguaje de Definición de Datos](#lenguaje-de-definición-de-datos)
+5. [Lenguaje de Manipulacion de Datos](#lenguaje-de-manipulación-de-datos)
 
 ## **Conceptos y términos de las Bases de Datos Relacionales.**
 
@@ -378,3 +379,107 @@ Al estar ordenado, un índice permite al SGBD usar algoritmos de búsqueda binar
 ```
         CREATE INDEX nombre_indice ON tabla (col1);
 ```
+
+___
+
+## **Lenguaje de Manipulación de Datos**
+___
+
+### <font color="orange"><ins>**INSERT**</ins></font>
+
+Carga uno o varios registros nuevos en una tabla de la base de datos en una misma operación.
+
+```
+Sintaxis: 
+         INSERT INTO tabla (col1, col2) VALUES (val1, val2);
+```
+> Donde tabla es la tabla en la cual queremos insertar los datos, col1 y col2 son las columnas en las que queremos
+insertar los valores val1 y val2
+
+- Si omitimos nombrar una columna, esta tomará un valor por defecto.
+
+- No hace falta pasar un valor para un campo definido como AUTO_INCREMENT .
+
+- Si se van a insertar valores para todas las columnas de la tabla no hace falta nombrarlas antes, pero es buena práctica hacerlo siempre. Por ejemplo:
+
+INSERT INTO peliculas (titulo, duracion, año)
+VALUES ('Metegol', 106, 2013);
+
+Para insertar varios registros en una sola sentencia podemos usar la siguiente sintaxis:
+
+```
+INSERT INTO tabla (col1, col2)
+VALUES (val1, val2), (val3, val4), (val5, val6);
+```
+
+```
+Por ejemplo
+           INSERT INTO peliculas (titulo, duracion, año)
+           VALUES ('El secreto de sus ojos', 129, 2009),
+           ('Nueve Reinas', 115, 2000),
+           ('Esperando la carroza', 96, 1989);
+```
+
+### <font color="orange"><ins>**UPDATE**</ins></font>
+Modifica los valores de los campos y registros especificados.
+```
+Sintaxis:
+         UPDATE tabla SET campo = valor [WHERE <condicion>];
+```
+> Con esta sentencia indicamos, primero, el nombre de la tabla a modificar, y luego, seguido de la palabra reservada SET, los campos, asignándoles un valor con el operador de asignación =. Se puede modificar más de un campo indicando las asignaciones separadas por comas
+
+- La sentencia UPDATE tiene la capacidad de modificar los campos indicados de todas las filas de una tabla dada.
+
+-  Admite la cláusula opcional WHERE, la cual brinda la posibilidad de filtrar los campos que van a ser afectados.
+
+- Si no usamos WHERE, la sentencia UPDATE afectaría los campos indicados de todos los registros de la tabla.
+
+- El uso de WHERE implica que debemos conocer la tabla de antemano, para saber como realizar el filtro.
+
+> Dentro de una cláusula WHERE, el símbolo = es un operador de comparación, por lo tanto, sirve para crear condiciones lógicas. Por otro lado, después de un SET de una sentencia UPDATE , = funciona como operador de asignación, y el valor se asigna al campo indicado
+
+
+*Por ejemplo, digamos que queremos modificar el campo año del registro de la película ‘Esperando la carroza’ que
+insertamos erróneamente como 1989 por el correcto, 1985. Podemos intentar usar la siguiente sentencia:*
+
+```
+Sentencia peligrosa:
+
+UPDATE peliculas SET año = 1985;
+
+Si ejecutamos esta sentencia, el campo año de todos los registros se modificaría a 1985.
+
+Sentencia correcta:
+
+UPDATE peliculas SET año = 1985 WHERE id_pelicula = 4;
+
+Debemos identificar unívocamente el registro que queremos modificar. La mejor forma es usando su clave primaria:
+
+```
+> No siempre vamos a querer modificar solo un registro de una tabla. A veces es necesario modificar varios registros que cumplan cierta condición. En tal caso, debemos diseñar una condición adecuada en la cláusula WHERE. Por ejemplo:
+
+*Digamos que queremos modificar el campo tipo de una hipotética tabla cuentas_bancarias al valor “vip” solo para las cuentas que superen los $10.000 000 de saldo. En tal caso deberíamos ejecutar una sentencia como la siguiente:*
+
+`
+UPDATE cuentas_bancarias SET tipo = “vip” WHERE saldo > 10000000;
+`
+
+### <font color="orange"><ins>**DELETE**</ins></font>
+
+Elimina uno o más registros de una tabla. De manera similar a UPDATE, solo permite indicar de qué tabla se tienen que eliminar los registros, por tal motivo, también admite una cláusula WHERE para filtrar los registros a eliminar.
+
+```
+Sintaxis:
+         DELETE FROM tabla WHERE <condicion>;
+```
+> Ejecutar un **DELETE** sobre una tabla X, sin cláusula **WHERE** es equivalente a ejecutar **TRUNCATE** X. En otras palabras, ambas sentencias eliminan todos los registros de la tabla.
+
+Al igual que en el ejemplo con UPDATE, lo mejor es indicar un registro por su clave primaria.
+
+Por ejemplo:
+
+*Digamos que queremos eliminar el registro de la película ‘Duro de matar’ por algún motivo. La sentencia debería ser:*
+
+`
+DELETE FROM peliculas WHERE id_pelicula = 1;
+`
