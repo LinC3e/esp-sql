@@ -4,6 +4,7 @@
 3. [Sentencias](#sentencias)
 4. [Lenguaje de Definición de Datos](#lenguaje-de-definición-de-datos)
 5. [Lenguaje de Manipulacion de Datos](#lenguaje-de-manipulación-de-datos)
+6. [Lenguaje de Consulta de Datos](#lenguaje-de-consulta-de-datos)
 
 ## **Conceptos y términos de las Bases de Datos Relacionales.**
 
@@ -483,3 +484,126 @@ Por ejemplo:
 `
 DELETE FROM peliculas WHERE id_pelicula = 1;
 `
+
+___
+## **Lenguaje de Consulta de Datos**
+___
+Permite consultar registros de la base de datos que satisfagan un criterio determinado.
+
+**SELECT** es la única sentencia de este sub-lenguaje, pero por su complejidad usualmente se la separa en su propio sub-lenguaje.
+
+- Permite distintos tipos de filtros.
+
+- Permite ordenamientos y agrupamientos de registros.
+
+- Permite limitar la cantidad de registros devueltos 
+
+- Permite obtener datos de una o más tablas, uniéndolas.
+
+> Generalmente se suele llamar a esta sentencia *consulta*
+
+```
+Su sintaxis (simplificada):
+SELECT <expresion_seleccion> FROM <referencia_tabla>
+        WHERE <condicion>
+        GROUP BY columna
+        ORDER BY columna
+        LIMIT cant;
+```
+
+### **<font color="pink"><ins>Expresión de selección</ins></font>**
+
+Lo que nombramos como <expresion_seleccion> es el espacio en donde se deben indicar qué campos queremos obtener en la consulta.
+
+Por ejemplo:
+
+`
+SELECT * FROM tabla;
+`
+> El carácter * como expresión de selección, este carácter es un comodín en SQL e indica que se van a solicitar todos los campos de la tabla.
+
+Podemos indicar una o dos columnas si lo deseamos, por ejemplo:
+
+`
+SELECT titulo, año FROM peliculas;
+`
+
+Nos devolverá una lista de todos los títulos de todas las películas y sus respectivos años de estreno. O, de la forma en que está diseñada la tabla.
+
+También existen diferentes funciones predefinidas que podemos usar en la expresión de selección. Por ahora, solo veremos una que es muy útil:
+
+- COUNT(col): devuelve la cantidad de registros que se encontraron en determinada 
+consulta. La forma correcta de usar esta función para obtener la cantidad de 
+registros es usando el comodín * como parámetro. Por ejemplo:
+
+`
+SELECT COUNT(*) FROM peliculas;
+`
+
+### **<font color="pink"><ins>**WHERE**</ins></font>**
+Esta cláusula impone una condición lógica sobre los registros que se van a recuperar de la base de datos. Los registros para los que la condición evalúe a verdadero serán devueltos y los que no, serán ignorados.
+
+#### **Operadores lógicos**
+- **AND** - Devuelve uno o más registros si ambos operandos son verdaderos.
+
+- **OR** - Devuelve uno o más registros si al menos uno de los operandos es verdadero.
+
+- **NOT** - Devuelve uno o más registros si la condición devuelve falso.
+
+- **campo1 BETWEEN valor1 AND valor2** - Devuelve uno o más registros si el valor del campo indicado está entre los dos valores
+
+Por ejemplo:
+
+`
+SELECT * FROM películas
+WHERE duracion > 100 AND duracion < 120;
+`
+
+o usando BETWEEN:
+
+`
+SELECT * FROM películas
+WHERE duracion BETWEEN 100 AND 120;
+`
+
+#### **LIKE**
+Este operador permite filtrar registros basado en la coincidencia de patrones Permite la definición de patrones textuales y devuelve los registros que cumplen con dicho patrón
+
+`
+SELECT <campos> FROM tabla WHERE campo LIKE <patron>;
+`
+
+Por ejemplo:
+
+`
+SELECT nombre FROM directores
+WHERE nombre LIKE 'Juan José Campanella';
+`
+
+Esta consulta devolverá los registros de la tabla directores cuyo nombre sea la cadena ‘Juan José Campanella’. Es decir, sería lo mismo que usar el operador =, iguala el valor exacto de la cadena
+
+Si no queremos que solo encuentre cadenas exactas, debemos usar comodines.
+Existen dos comodines que se pueden usar para definir patrones con **LIKE**, ellos son:
+
+- % representa ninguno, uno o múltiples caracteres
+
+- _  representa solo un carácter.
+
+Por ejemplo
+
+`
+SELECT nombre FROM directores
+WHERE nombre LIKE ‘Juan Jos_ Campanella’;
+`
+
+Encontrará a directores con los nombres ‘Juan José Campanella’, y también a nombres erróneamente almacenados como ‘Juan Josr Campanella`
+
+Por otro lado:
+
+`
+SELECT nombre FROM directores WHERE nombre LIKE 'Juan%';
+`
+
+Encontrará a directores cuyos nombres comiencen con la cadena ‘Juan’ y terminen con cualquier combinación de caracteres.
+
+Pueden ser: ‘Juan José Campanella’, ‘Juan Perez’ o ‘Juan Martínez’, ya que todos comienzan con ‘Juan’
