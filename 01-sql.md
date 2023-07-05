@@ -607,3 +607,13 @@ SELECT nombre FROM directores WHERE nombre LIKE 'Juan%';
 Encontrará a directores cuyos nombres comiencen con la cadena ‘Juan’ y terminen con cualquier combinación de caracteres.
 
 Pueden ser: ‘Juan José Campanella’, ‘Juan Perez’ o ‘Juan Martínez’, ya que todos comienzan con ‘Juan’
+
+Inclusive podemos combinar dos búsquedas mutuamente excluyentes con el operador **AND**
+
+Pj: 
+
+`SELECT nombre FROM directores`
+
+`WHERE nombre LIKE 'Juan%' AND nombre LIKE '%lla';`
+
+> Encontrará a directores cuyo nombre comience con la cadena ‘Juan’ y termine con la cadena ‘lla’. Por lo tanto, encontrará, por ejemplo, a directores con nombre‘Juan José Campanella’, ‘Juan Padilla’, ‘Juan Mansilla’, etc.
