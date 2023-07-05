@@ -617,3 +617,23 @@ Pj:
 `WHERE nombre LIKE 'Juan%' AND nombre LIKE '%lla';`
 
 > Encontrará a directores cuyo nombre comience con la cadena ‘Juan’ y termine con la cadena ‘lla’. Por lo tanto, encontrará, por ejemplo, a directores con nombre‘Juan José Campanella’, ‘Juan Padilla’, ‘Juan Mansilla’, etc.
+
+### **<font color="pink"><ins>**GROUP BY**</ins></font>**
+Esta cláusula sirve para agrupar registros que tienen el mismo valor en cierto campo (llamado campo de agrupación). Normalmente es usada con alguna función de agregación, como la antes vista COUNT() u otras como SUM() o AVG().
+
+```
+Sintaxis;
+         SELECT FUNCION(), col1, ... FROM tabla GROUP BY col1;
+```
+Por ejemplo, podríamos hacer una consulta para obtener la cantidad de películas que fueron dirigidas por el mismo director, ya que sabemos que el director (su id) se repite en la tabla peliculas.
+
+```
+SELECT director, COUNT(*) AS cantidad FROM películas
+GROUP BY director;
+```
+Como vemos, incluimos el campo director en la expresión de selección ya que estamos utilizando el GROUP BY sobre ese campo. Si no lo incluimos MySQL usualmente puede devolver datos, pero en general esto no es lo correcto. Además, no sabríamos a qué director corresponde qué cantidad.
+
+En este último ejemplo usamos un alias, con la palabra reservada AS, como nombre del 
+campo temporario donde se suman las cantidades de películas. El result-set tendrá 
+entonces, dos campos, director y cantidad. También podemos volver a usar el alias 
+dentro de la consulta en lugar de lo que representa.
