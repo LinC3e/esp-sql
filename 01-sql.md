@@ -637,3 +637,197 @@ En este último ejemplo usamos un alias, con la palabra reservada AS, como nombr
 campo temporario donde se suman las cantidades de películas. El result-set tendrá 
 entonces, dos campos, director y cantidad. También podemos volver a usar el alias 
 dentro de la consulta en lugar de lo que representa.
+
+### **<font color="pink"><ins>**ORDER BY**</ins></font>**
+Esta cláusula sirve para ordenar el result-set de una consulta por algún campo.
+- **El orden puede ser ascendente o descendente, dependiendo de los modificadores ASC o DESC respectivamente.**
+
+- **El valor de orden por defecto es ASC (ascendente).**
+
+- **Si el campo es de tipo cadena de texto, se ordenará según su orden alfabético.**
+
+- **Si el campo es del tipo fecha se ordenará cronológicamente.**
+
+- **No es necesario que la columna por la que se ordena este presente en la expresión de selección.**
+
+```
+Sintaxis: 
+         SELECT col1, col2, ... FROM tabla ORDER BY col_X;
+```
+
+*Por ejemplo, con una base de datos cine, si queremos los datos de las películas ordenadas alfabéticamente ascendentemente (de menor a mayor) por título, podemos ejecutar la siguiente consulta.*
+
+`SELECT titulo FROM peliculas ORDER BY titulo;`
+
+*O, si queremos los datos de las películas ordenadas descendentemente (de mayor a menor) por duración.*
+
+`SELECT titulo, duracion FROM peliculas ORDER BY duracion DESC;`
+
+### **<font color="pink"><ins>**LIMIT**</ins></font>**
+
+Esta cláusula simplemente limita la cantidad de registros devueltos en una consulta a un número entero. Siempre debe ir al final de una sentencia SELECT.
+
+```
+Sintaxis: 
+         SELECT campos... FROM tabla LIMIT <numero entero>;
+```
+*Por ejemplo, si queremos obtener solo los 10 países con mayor superficie, de la base de datos world:*
+
+`SELECT Name, SurfaceArea
+FROM country
+ORDER BY SurfaceArea DESC
+LIMIT 10;`
+
+*Por ejemplo, si queremos obtener un ranking de los primeros 5 países que tienen más ciudades registradas en la base de datos de clientes de sakila, podemos hacer:*
+
+`
+SELECT country_id, COUNT(*) AS cantidad FROM city
+GROUP BY country_id
+ORDER BY cantidad DESC
+LIMIT 5;
+`
+
+### **<font color="pink"><ins>**JOIN**</ins></font>**
+
+Esta cláusula se usa para obtener datos de dos o más tablas. Forma parte de la cláusula FROM, ya que esta indica de qué tabla o tablas queremos obtener los datos.Las tablas a unir usualmente están relacionadas por una clave foránea y la unión se hace sobre esa clave. Pero esto no es necesario, ya que se pueden ejecutar uniones sobre cualesquiera dos campos, mientras que sean del mismo tipo y rango.Cada unión, se realiza entre dos tablas. Si se quieren relacionar más tablas se deben incluir más cláusulas JOIN. Existen cuatro tipos de uniones (en MySQL)
+
+- INNER JOIN
+
+- RIGHT JOIN
+
+- LEFT JOIN
+
+- CROSSJOIN
+
+#### **INNER JOIN**
+Selecciona registros que tienen valores coincidentes en ambas tablas.
+Si un valor existe solo en una de las tablas no figurará en el resultado.
+
+```
+Sintaxis:
+         SELECT tabla1.campo1, tabla2.campo1, ...
+         FROM tabla1
+         INNER JOIN tabla2 ON tabla1.campoX = tabla2.campoY
+```
+
+![Ejemplo grafico de INNER JOIN](/images/inner.JPG)
+
+> En este ejemplo, se seleccionan todos los registros, de ambas tablas 
+(tabla1 y tabla2), en los que los campos tabla1.campoX y tabla2.campoY coincidan.
+
+> De esos registros se mostrarán los campos indicados (tabla1.campo1
+y tabla2.campo1).
+
+- Se recomienda usar nombres de campos calificados para evitar ambigüedades, ya que, al unir dos tablas, estas pueden tener el columnas con el mismo nombre.
+
+- Solo se obtendrán registros para los cuales los valores de sus campos coincidan.
+
+- Los campos mostrados pueden ser cualquiera de las tablas que se están uniendo.
+
+- Los campos que se igualan indican qué registros se deben obtener.
+
+- La expresión de selección indica cuales campos, de los registros obtenidos, queremos mostrar como result-set.
+
+
+*Por ejemplo, usando la base de datos world: Queremos obtener el nombre del país al que pertenece la ciudad ‘Amsterdam’.*
+
+```
+SELECT country.Name, city.Name
+FROM city INNER JOIN country
+ON city.CountryCode = country.Code
+WHERE city.Name = "Amsterdam";
+```
+
+> **Uniendo tres tablas a la vez**
+
+```
+Sintaxis:
+        SELECT tabla1.campo1, tabla2.campo3, ...
+        FROM ((tabla1
+        INNER JOIN tabla2
+        ON tabla1.campoX = tabla2.campoY)
+        INNER JOIN tabla3
+        ON tabla1.campoZ = tabla3.campoT)
+```
+
+#### **LEFT JOIN**
+Devuelve todos los registros de la tabla de la izquierda (la que se nombra primero) y solo los registros que coincidan de la tabla de la
+derecha (la que se nombra segunda). Si no existe ninguna coincidencia no se obtendrá ningún registro de la tabla derecha.
+
+```
+Sintaxis: 
+         SELECT tabla1.campo1, tabla2.campo1, ...
+         FROM tabla1 LEFT JOIN tabla2
+         ON tabla1.campoX = tabla2.campoY;
+```
+
+![Ejemplo grafico de INNER JOIN](/images/left-join.JPG)
+
+*Usando las tablas de nuestra base de datos cine, digamos que tenemos los siguientes datos cargados:*
+
+![Ejemplo grafico de INNER JOIN](/images/ej-left-join.JPG)
+
+Y queremos obtener todos los directores, y las películas que dirigieron, si es que tienen registros.
+
+Tendremos que realizar un LEFT JOIN tomando como tabla izquierda,directores, ya que queremos si o si todos los directores.
+
+```
+SELECT directores.nombre, peliculas.titulo
+FROM directores LEFT JOIN peliculas
+ON directores.id_director = peliculas.director;
+```
+
+![Ejemplo grafico de INNER JOIN](/images/res-left-join.JPG)
+
+> Podemos observar dos cosas, primero, que, ya que ‘Juan José Campanella’ tenía 2 películas, figuran sus 2 registros.
+Y segundo, ‘Andy Muschietti’ no tiene ninguna película registrada, sin embargo, ya que estamos usando LEFT JOIN este debe figurar, aunque tenga el valor NULL
+
+
+#### **RIGHT JOIN**
+Esta sentencia es equivalente a la anterior, pero le da prioridad a la tabla de la derecha. Funcionalmente es idéntica a la anterior.
+
+En otras palabras, se puede obtener el mismo resultado que obtiene LEFT JOIN si invirtiéramos el orden en que se nombran las tablas.
+
+```
+Sintaxis: 
+         SELECT tabla1.campo1, tabla2.campo1, ...
+         FROM tabla1
+         RIGHT JOIN tabla2
+         ON tabla1.campoX = tabla2.campoY;
+```
+
+![Ejemplo grafico de INNER JOIN](/images/right-join.JPG)
+
+
+#### **CROSS JOIN**
+Devuelve todos los registros de ambas tablas como producto cartesiano, es decir, todos los registros de una tabla en relación con todos los registros de la otra tabla.
+
+Esta consulta no utiliza la cláusula ON ya que siempre devuelve el producto cartesiano de los registros
+
+```
+Sintaxis:
+         SELECT tabla1.campo1, tabla2.campo1, ...
+         FROM tabla1
+         CROSS JOIN tabla2;
+```
+
+![Ejemplo grafico de INNER JOIN](/images/cross-join.JPG)
+
+> Esta cláusula es específica de MySQL. Y el diagrama de Venn no
+representa exactamente su funcionalidad, ya que son muchos más
+registros los que devuelve.
+
+*Por ejemplo, si realizamos un CROSS JOIN entre nuestras tablas
+peliculas y directores, obtendremos un result-set de 16
+registros de todos las películas combinadas con todos los directores.
+Lo cual no tiene mucho sentido.*
+
+`
+SELECT directores.nombre, peliculas.tituloFROM peliculas CROSS JOIN directores;
+`
+
+![Ejemplo grafico de INNER JOIN](/images/cross-join-ej.JPG)
+
+> Sin embargo, hay veces en que se necesitan obtener todas las
+combinaciones de dos elementos (representados por tablas), en las
+cuales es de utilidad
