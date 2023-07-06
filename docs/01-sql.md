@@ -5,6 +5,7 @@
 4. [Lenguaje de Definición de Datos](#lenguaje-de-definición-de-datos)
 5. [Lenguaje de Manipulacion de Datos](#lenguaje-de-manipulación-de-datos)
 6. [Lenguaje de Consulta de Datos](#lenguaje-de-consulta-de-datos)
+7. [Funciones](#funciones)
 
 ## **Conceptos y términos de las Bases de Datos Relacionales.**
 
@@ -831,3 +832,64 @@ SELECT directores.nombre, peliculas.tituloFROM peliculas CROSS JOIN directores;
 > Sin embargo, hay veces en que se necesitan obtener todas las
 combinaciones de dos elementos (representados por tablas), en las
 cuales es de utilidad
+
+___
+## **Funciones**
+___
+Ya vimos algunas funciones de MySQL. Algunas de agregación, especialmente útiles para su uso con GROUP BY.
+Algunas que devuelven valores del sistema operativo, como las de fecha y hora.
+
+Vamos a ver algunas de ellas clasificadas en estos grupos: 
+
+- De agregacion.
+
+- Numéricas y matemáticas
+
+- Operaciones con cadenas
+
+- Fecha y hora
+
+### **De agregacion**
+
+| Sintaxis   | Descripcion |
+| -----------| ----------- |
+| COUNT(col) | devuelve la cantidad de registros encontrados.|
+| MAX(col)   | devuelve el valor máximo de la columna indicada dentro de un resultado |
+| MIN(col)   | devuelve el valor mínimo de la columna indicada dentro de un result-set.|
+| AVG(col)   | devuelve el promedio (average) de los valores de una columna específica. La columna debe ser de algún tipo numérico para permitir el cálculo.|
+| SUM(col)   |  devuelve la suma de los valores de una columna específica. La columna debe ser de algún tipo numérico para permitir el cálculo.|
+
+### **Numéricas y matemáticas**
+
+| Sintaxis   | Descripcion |
+| -----------| ----------- |
+| ABS(x)     | devuelve el valor absoluto de un valor x pasado como parámetro.|
+| PI()       | devuelve el valor de pi, hasta 7 decimales. |
+| ROUND(x)   | devuelve el valor de x redondeado.|
+| MOD(x, y)  | devuelve el resto de la división de x con y.|
+| POW(x, y)  | devuelve el valor de x elevado a la y |
+| SQRT(x)    | devuelve la raíz cuadrada de x.|
+
+### **Cadenas**
+
+| Sintaxis   | Descripcion |
+| -----------| ----------- |
+|CONCAT(str1, str2, ...) |  devuelve una cadena que concatena todas las cadenas pasadas por parámetro.|
+| LOWER(str) | devuelve la cadena pasada como parámetro en minúsculas. |
+| UPPER(str)  | devuelve la cadena pasada como parámetro en mayúsculas.|
+| REVERSE(str) | devuelve la cadena con los caracteres ordenados al revés.|
+
+### **Fecha y Hora**
+
+| Sintaxis   | Descripcion |
+| -----------| ----------- |
+| CURDATE()  | devuelve la fecha actual en el formato “YYYY-MM-DD”. |
+| CURTIME()  | devuelve la hora actual en el formato: “HH-MM-SS”.|
+| NOW()      | devuelve la fecha y la hora actuales en el formato “YYYY-MM-DD HH-MM-SS"|
+| EXTRACT()  | extraer una parte de una fecha-hora. La parte debe ser especificada con las palabras reservadas: MICROSECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, YEAR, entre otras. |
+
+> Los valores que devuelven las funciones pueden ser usados para establecer valores por 
+defecto para columnas de una tabla, para insertar o actualizar alguna columna de un 
+registro, o para devolverlos al usuario.
+Estas solo son algunas de las funciones disponibles en MySQL. Podemos encontrar el listado 
+completo de funciones en la documentación oficial de MySQL.
